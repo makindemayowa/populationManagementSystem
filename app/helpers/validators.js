@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
 module.exports = {
   createLocation: Joi.object({
@@ -6,7 +6,12 @@ module.exports = {
     male: Joi.number().required(),
     female: Joi.number().required(),
     total: Joi.number().required(),
-    nestedLocations: Joi.array(),
+    nestedLocations: Joi.array()
+  }),
+
+  user: Joi.object({
+    email: Joi.string().email(),
+    password: Joi.string().required()
   }),
 
   updateLocation: Joi.object({
@@ -14,7 +19,6 @@ module.exports = {
     male: Joi.number(),
     female: Joi.number(),
     total: Joi.number(),
-    nestedLocations: Joi.array(),
-  }),
-
+    nestedLocations: Joi.array()
+  })
 };
