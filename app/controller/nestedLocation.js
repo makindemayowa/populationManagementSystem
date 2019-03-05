@@ -18,9 +18,11 @@ exports.create = (req, res) => {
           if (err) return res.status(500).send({ err });
           location.nestedLocations.push(savedNestedLocation._id);
           location.save((err, newLocation) => {
-            return res
-              .status(201)
-              .send({ message: "location saved", newLocation });
+            return res.status(201).send({
+              message: "location saved",
+              newLocation,
+              savedNestedLocation
+            });
           });
         });
       });
@@ -47,12 +49,12 @@ exports.update = (req, res) => {
     { _id: req.params.locationId },
     { $set: req.body },
     { new: true },
-    (err, response) => {
-      if (!response) {
+    (err, nestedLocation) => {
+      if (!nestedLocation) {
         return res.status(404).send({ message: "nested location not found" });
       }
       if (err) return res.status(500).send({ err });
-      return res.status(200).send({ message: "success", response });
+      return res.status(200).send({ message: "success", nestedLocation });
     }
   );
 };
@@ -68,7 +70,12 @@ exports.delete = (req, res) => {
         location.nestedLocations.splice(index, 1);
         location.save((error, newLocation) => {
           if (error) return res.status(500).send({ error });
-          return res.status(200).send({ newLocation });
+          return res
+            .status(200)
+            .send({
+              message: "nested location deleted successfully",
+              newLocation
+            });
         });
       });
     } else {

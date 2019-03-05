@@ -12,7 +12,6 @@ const verifyToken = (req, res, next, token) => {
   });
 };
 exports.checkToken = (req, res, next) => {
-  console.log(req.headers);
   const token = req.headers["authorization"];
   if (token) {
     strippedToken = token.replace("Bearer ", "");

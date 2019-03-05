@@ -4,7 +4,7 @@ const NestedLocation = require("../models/nestedLocation");
 exports.create = (req, res) => {
   const name = req.body.name.trim().toLowerCase();
   req.body.name = name;
-  Location.findOne({ name }, (error, location) => {
+  Location.findOne({ name, status: "active" }, (error, location) => {
     if (error) return res.status(500).send({ error });
     if (location) {
       return res
@@ -32,13 +32,15 @@ exports.getAll = (req, res) => {
 };
 
 exports.getOne = (req, res) => {
-  Location.findOne({ _id: req.params.id }).exec((err, location) => {
-    if (!location) {
-      return res.status(404).send({ message: "Location not found" });
+  Location.findOne({ _id: req.params.id, status: "active" }).exec(
+    (err, location) => {
+      if (!location) {
+        return res.status(404).send({ message: "Location not found" });
+      }
+      if (err) return res.status(500).send({ err });
+      return res.status(200).send({ message: "success", location });
     }
-    if (err) return res.status(500).send({ err });
-    return res.status(200).send({ message: "success", location });
-  });
+  );
 };
 
 exports.update = (req, res) => {
@@ -46,12 +48,12 @@ exports.update = (req, res) => {
     { _id: req.params.id, status: "active" },
     { $set: req.body },
     { new: true },
-    (err, response) => {
-      if (!response) {
+    (err, location) => {
+      if (!location) {
         return res.status(404).send({ message: "location not found" });
       }
       if (err) return res.status(500).send({ err });
-      return res.status(200).send({ message: "success", response });
+      return res.status(200).send({ message: "success", location });
     }
   );
 };

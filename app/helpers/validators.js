@@ -10,7 +10,9 @@ module.exports = {
   }),
 
   user: Joi.object({
-    email: Joi.string().email(),
+    email: Joi.string()
+      .email()
+      .required(),
     password: Joi.string().required()
   }),
 

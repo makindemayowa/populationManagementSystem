@@ -14,6 +14,18 @@ const UserSchema = new Schema(
   { timestamps: { createdAt: "created_at" } }
 );
 
+UserSchema.pre("save", function(next) {
+  var user = this;
+
+  if (!user.isModified("password")) return next();
+
+  bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
+    if (err) return next(err);
+    user.password = bcrypt.hashSync(user.password, salt);
+    next();
+  });
+});
+
 (UserSchema.methods.comparePassword = function(plainText) {
   return bcrypt.compareSync(plainText, this.password);
 }),
