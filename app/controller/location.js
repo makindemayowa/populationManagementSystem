@@ -1,5 +1,4 @@
 const Location = require("../models/location");
-const NestedLocation = require("../models/nestedLocation");
 
 exports.create = (req, res) => {
   const name = req.body.name.trim().toLowerCase();
