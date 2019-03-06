@@ -10,7 +10,7 @@ const User = require("../models/user");
 chai.should();
 chai.use(chaiHttp);
 
-describe("User controller", () => {
+describe("Nested Location controller", () => {
   let token;
   let locationId;
   let nestedLocationId;
@@ -55,6 +55,33 @@ describe("User controller", () => {
   });
 
   describe("/POST nested location", () => {
+    it("should fail if no token was provided", done => {
+      chai
+        .request(server)
+        .post(`/api/locations/${locationId}`)
+        .send(mockData.nestedLocation1)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.be.a("object");
+          res.body.message.should.be.a("string").eql("No token provided.");
+          done();
+        });
+    });
+    it("should fail if token provided is invalid", done => {
+      chai
+        .request(server)
+        .post(`/api/locations/${locationId}`)
+        .send(mockData.nestedLocation1)
+        .set("Authorization", `Bearer sometoken`)
+        .end((err, res) => {
+          res.should.have.status(403);
+          res.body.should.be.a("object");
+          res.body.message.should.be
+            .a("string")
+            .eql("Failed to authenticate token.");
+          done();
+        });
+    });
     it("should create a new nested location", done => {
       chai
         .request(server)

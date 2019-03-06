@@ -9,7 +9,7 @@ const User = require("../models/user");
 chai.should();
 chai.use(chaiHttp);
 
-describe("User controller", () => {
+describe("Location controller", () => {
   let token;
   let locationId;
   before(done => {
